@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+test.bin
+restored_test.txt
+test.txt
+
+*.bin
+*.huff
