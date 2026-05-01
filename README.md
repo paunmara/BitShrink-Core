@@ -1,29 +1,30 @@
-# Network Sentinel 🛡️
+# Huffman Archiver (BitSqueeze) 📂
 
-Network Sentinel is a sophisticated **Network Intrusion Detection System (NIDS)** designed for real-time traffic monitoring and threat identification. By leveraging Deep Packet Inspection (DPI) and temporal heuristic analysis, the system identifies anomalous patterns—such as DDoS attempts or unauthorized port scans—across local and wide-area networks.
-
-## 🏗️ System Architecture
-The application is built on a **multi-threaded asynchronous architecture**, ensuring that high-speed packet ingestion never bottlenecks the user interface or analytical engine.
+**BitSqueeze** is a high-performance, lossless data compression utility engineered to implement the classic **Huffman Coding** algorithm. The project provides an end-to-end pipeline for converting standard datasets into optimized binary archives, focusing on information theory and bit-level data manipulation.
 
 
 
-### Core Components:
-* **Ingestion Engine:** Utilizes the Scapy library to interface with raw sockets, capturing L2/L3/L4 data across specified network interfaces.
-* **DPI Layer (Deep Packet Inspection):** Performs protocol analysis at the Transport Layer (TCP/UDP), mapping destination ports to a database of 1,000+ registered services (HTTPS, SSH, DNS, etc.).
-* **Heuristic Analyzer:** Implements a **Sliding Window Algorithm** using `collections.deque`. It monitors packet frequency within a 10-second temporal window to detect volumetric attacks.
-* **Geospatial Resolver:** Interfaces with RESTful APIs to provide real-time geographic attribution for external IP addresses.
-* **SOC Dashboard:** A high-fidelity terminal UI built with `Rich`, utilizing ANSI escape codes for stationary, real-time data visualization.
+## 🏗️ System Architecture & Engineering
+The architecture is modular, separating the analytical engine from the I/O layer to ensure maintainability and high processing speed.
 
-## 📊 Performance & Scalability
-* **Concurrency:** Decoupled Sniffer and UI threads maintain sub-200ms latency in dashboard updates.
-* **Memory Efficiency:** Pruning logic ensures that the `ip_log` and `recent_packets` buffers remain at a constant memory footprint, regardless of uptime.
+### 1. Frequency Analysis & Modeling
+The system initiates a single-pass scan of the input file to generate a frequency distribution map. By utilizing a hash map (dictionary) for $O(1)$ lookups, the engine identifies the statistical weight of every character in the source data.
 
-## 🚦 Deployment
-1. **Initialize Environment:** `python -m venv .venv && source .venv/bin/activate`
-2. **Install Dependencies:** `pip install -r requirements.txt`
-3. **Elevated Execution:** `sudo python main.py` (Linux) or Run as Administrator (Windows).
+### 2. Min-Heap & Binary Tree Construction
+To ensure optimal compression, the algorithm constructs a Huffman tree from the bottom up.
+* **Priority Queueing:** A Min-Heap (`heapq`) is utilized to maintain nodes ordered by frequency.
+* **Greedy Merging:** The algorithm iteratively extracts the two nodes with the lowest frequencies and merges them into a parent node. This process continues until a singular root node remains, forming the foundation of the optimal prefix-free code.
 
-## 🧪 Quality Assurance
-Validated via a comprehensive suite of unit tests covering the detection logic and data integrity:
-```bash
-python -m unittest discover tests
+### 3. Tree Serialization & Metadata
+A critical challenge in decompression is reconstructing the tree without external data. BitSqueeze addresses this by serializing the tree structure as metadata within the archive's header. This makes the archive **self-contained**, allowing the decompression module to reconstruct the exact pathing required to retrieve the original data.
+
+### 4. Bit-Packing Engine
+Standard file systems operate at the byte level, while Huffman codes operate at the bit level. The engine utilizes custom **bitwise operations** (`<<`, `&`, `|`) to pack variable-length Huffman codes into 8-bit sequences (bytes). This ensures that the final file is as dense as mathematically possible.
+
+## ⚙️ Technical Complexity
+* **Time Complexity:** * Compression: $O(n \log k)$ where $n$ is the file size and $k$ is the alphabet size.
+    * Decompression: $O(n)$, allowing for rapid restoration.
+* **Space Complexity:** $O(k)$ to maintain the character weight map and tree structure.
+
+## 🧪 Rigorous Verification & Testing
+The project implements a comprehensive unit testing suite to guarantee data integrity. Automated tests verify that the checksum of the decompressed output matches the source file identically.
