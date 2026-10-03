@@ -1,10 +1,8 @@
-# Huffman Archiver (BitSqueeze) 📂
+# Huffman Archiver
 
-**BitSqueeze** is a high-performance, lossless data compression utility engineered to implement the classic **Huffman Coding** algorithm. The project provides an end-to-end pipeline for converting standard datasets into optimized binary archives, focusing on information theory and bit-level data manipulation.
+**BitShrink** is a high-performance, lossless data compression utility engineered to implement the classic **Huffman Coding** algorithm. The project provides an end-to-end pipeline for converting standard datasets into optimized binary archives, focusing on information theory and bit-level data manipulation.
 
-
-
-## 🏗️ System Architecture & Engineering
+## System Architecture & Engineering
 The architecture is modular, separating the analytical engine from the I/O layer to ensure maintainability and high processing speed.
 
 ### 1. Frequency Analysis & Modeling
@@ -21,10 +19,10 @@ A critical challenge in decompression is reconstructing the tree without externa
 ### 4. Bit-Packing Engine
 Standard file systems operate at the byte level, while Huffman codes operate at the bit level. The engine utilizes custom **bitwise operations** (`<<`, `&`, `|`) to pack variable-length Huffman codes into 8-bit sequences (bytes). This ensures that the final file is as dense as mathematically possible.
 
-## ⚙️ Technical Complexity
+## Technical Complexity
 * **Time Complexity:** * Compression: $O(n \log k)$ where $n$ is the file size and $k$ is the alphabet size.
     * Decompression: $O(n)$, allowing for rapid restoration.
 * **Space Complexity:** $O(k)$ to maintain the character weight map and tree structure.
 
-## 🧪 Rigorous Verification & Testing
+## Rigorous Verification & Testing
 The project implements a comprehensive unit testing suite to guarantee data integrity. Automated tests verify that the checksum of the decompressed output matches the source file identically.
